@@ -1,4 +1,4 @@
-name: .NET 8 CI/CD
+name: FinanseerApi CI/CD
 
 on:
   push:
