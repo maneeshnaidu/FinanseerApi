@@ -23,7 +23,7 @@ jobs:
         run: dotnet restore ./api
 
       - name: Build
-        # run: dotnet build ./src/LoyaltyProCore --no-restore
+        # run: dotnet build ./api --no-restore
         run: dotnet build ./api --configuration Release
 
       - name: Publish
