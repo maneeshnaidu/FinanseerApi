@@ -27,7 +27,7 @@ jobs:
         run: dotnet build ./api --configuration Release
 
       - name: Publish
-        run: dotnet publish -c Release -o ./publish    
+        run: dotnet publish ./api -c Release -o ./publish    
 
       - name: Run tests
         run: dotnet test ./api --no-build --verbosity normal
