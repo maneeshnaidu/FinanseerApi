@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using api.Dtos.Account;
 using api.Interfaces;
 using api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
@@ -94,5 +96,19 @@ namespace api.Controllers
                 return StatusCode(500, e);
             }
         }
+
+        // [HttpGet("forgot-password")]
+        // public async Task<IActionResult> ForgotPasswordRequest(ForgotPasswordDto forgotPasswordDto)
+        // {
+        //     if (!ModelState.IsValid)
+        //         return BadRequest(ModelState);
+
+        //     var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == forgotPasswordDto.Email.ToLower());
+
+        //     var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user!);
+        //     string validToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(resetToken));
+
+        //     return Ok(SendEmail(user!.Email, validToken));
+        // }
     }
 }

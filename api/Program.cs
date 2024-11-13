@@ -63,8 +63,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 12;
 })
-.AddEntityFrameworkStores<ApplicationDBContext>();
-
+.AddRoles<IdentityRole>() // Adds role management
+.AddEntityFrameworkStores<ApplicationDBContext>()
+.AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -97,6 +98,15 @@ builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 builder.Services.AddScoped<IFMPService, FMPService>();
 builder.Services.AddHttpClient<IFMPService, FMPService>();
 
+// Add CORS for vercel frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVercel",
+        policy => policy
+            .WithOrigins("https://finanseer-react-app.vercel.app/") // Replace with your actual Vercel domain
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
 var app = builder.Build();
 
@@ -115,6 +125,9 @@ app.UseCors(x => x
      .AllowCredentials()
     //   .WithOrigins("https://localhost:44351"));
       .SetIsOriginAllowed(origin => true));
+
+// Use the CORS policy
+app.UseCors("AllowVercel");
 
 app.UseAuthentication();
 app.UseAuthorization();
