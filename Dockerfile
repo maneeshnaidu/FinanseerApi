@@ -15,12 +15,12 @@ WORKDIR /app
 COPY ./api/ ./api/
 
 # Build and publish the app
-WORKDIR /app/src
+WORKDIR /FinanseerApi
 RUN dotnet publish ../api/api.sln -c Release -o /app/publish
 
 # Use a runtime image for the app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
+WORKDIR /FinanseerApi
 COPY --from=build /app/publish .
 
 # Expose the default ASP.NET Core port
