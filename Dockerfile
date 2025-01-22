@@ -2,7 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copy the solution file and project files
+# Copy the solution and project files
 COPY ./api/api.sln ./api/
 COPY ./api/*.csproj ./api/
 
@@ -10,10 +10,10 @@ COPY ./api/*.csproj ./api/
 WORKDIR /app/api
 RUN dotnet restore
 
-# Copy the entire project into the container
+# Copy only the necessary files (excludes obj and bin directories)
 COPY ./api/ ./api/
 
-# Publish the application in release mode
+# Publish the application to /app/publish
 RUN dotnet publish -c Release -o /app/publish
 
 # Stage 2: Create the runtime image
