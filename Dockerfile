@@ -1,22 +1,24 @@
-# Use the official .NET 8 SDK image
+# Use the official .NET 8 SDK image for building the app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copy the solution file and restore dependencies
-COPY FinanseerApi/api/api.sln .
-COPY FinanseerApi/api/*/*.csproj ./src/
-WORKDIR /app/src
-RUN dotnet restore ../api.sln
+# Copy the solution file and project files
+COPY ./api/api.sln ./api/
+COPY ./api/*/*.csproj ./src/
 
-# Copy all source files
+# Restore dependencies
+WORKDIR /app/src
+RUN dotnet restore ../api/api.sln
+
+# Copy the entire project content
 WORKDIR /app
-COPY FinanseerApi/api/ .
+COPY ./api/ ./api/
 
-# Build and publish the application
+# Build and publish the app
 WORKDIR /app/src
-RUN dotnet publish ../api.sln -c Release -o /app/publish
+RUN dotnet publish ../api/api.sln -c Release -o /app/publish
 
-# Build runtime image
+# Use a runtime image for the app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
