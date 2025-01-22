@@ -1,29 +1,29 @@
-# Use the official .NET 8 SDK image for building the app
+# Stage 1: Build the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /FinanseerApi
+WORKDIR /app
 
 # Copy the solution file and project files
 COPY ./api/api.sln ./api/
-COPY ./api/*/*.csproj ./src/
+COPY ./api/*.csproj ./api/
 
 # Restore dependencies
-WORKDIR /FinanseerApi
-RUN dotnet restore ../api/api.sln
+WORKDIR /app/api
+RUN dotnet restore
 
-# Copy the entire project content
-WORKDIR /FinanseerApi
+# Copy the entire project into the container
 COPY ./api/ ./api/
 
-# Build and publish the app
-WORKDIR /FinanseerApi
-RUN dotnet publish ../api/api.sln -c Release -o /app/publish
+# Publish the application in release mode
+RUN dotnet publish -c Release -o /app/publish
 
-# Use a runtime image for the app
+# Stage 2: Create the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /FinanseerApi
+WORKDIR /app
+
+# Copy the published app from the build stage
 COPY --from=build /app/publish .
 
-# Expose the default ASP.NET Core port
+# Expose the default port
 EXPOSE 5000
 
 # Run the application
