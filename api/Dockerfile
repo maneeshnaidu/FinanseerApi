@@ -17,7 +17,7 @@ RUN dotnet clean
 COPY ./api/ ./api/
 
 # Ensure permissions for bin and obj directories
-RUN chmod -R 777 /app/api/bin /app/api/obj
+# RUN chmod -R 777 /app/api/bin /app/api/obj
 
 # Publish the application to /app/publish
 RUN dotnet publish -c Release -o /app/publish --no-restore
