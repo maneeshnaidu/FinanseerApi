@@ -2,7 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copy the solution and project files
+# Copy solution and project files
 COPY ./api/api.sln ./api/
 COPY ./api/*.csproj ./api/
 
@@ -10,11 +10,17 @@ COPY ./api/*.csproj ./api/
 WORKDIR /app/api
 RUN dotnet restore
 
-# Copy the rest of the app files
+# Clean the build directories
+RUN dotnet clean
+
+# Copy the rest of the application files
 COPY ./api/ ./api/
 
+# Ensure permissions for bin and obj directories
+RUN chmod -R 777 /app/api/bin /app/api/obj
+
 # Publish the application to /app/publish
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish -c Release -o /app/publish --no-restore
 
 # Stage 2: Create the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
