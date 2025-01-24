@@ -10,7 +10,7 @@ COPY ./api/*.csproj ./api/
 WORKDIR /app/api
 RUN dotnet restore
 
-# Copy only the necessary files (excludes obj and bin directories)
+# Copy the rest of the app files
 COPY ./api/ ./api/
 
 # Publish the application to /app/publish
@@ -23,7 +23,7 @@ WORKDIR /app
 # Copy the published app from the build stage
 COPY --from=build /app/publish .
 
-# Expose the default port
+# Expose the port your app runs on
 EXPOSE 5000
 
 # Run the application
