@@ -3,19 +3,16 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy the solution and project file first
-COPY api/api.sln ./
-COPY api/api.csproj ./api/
+COPY api.sln ./
+COPY api.csproj ./
 
 # Restore dependencies
-WORKDIR /app/api
-RUN dotnet restore
+RUN dotnet restore api.csproj
 
 # Copy everything else
-COPY api/. ./
-
-# Build and publish
-RUN dotnet build --no-restore
-RUN dotnet publish -c Release -o /publish
+COPY . ./
+RUN dotnet build api.csproj --no-restore
+RUN dotnet publish api.csproj -c Release -o /publish
 
 # Use a smaller runtime image for production
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
