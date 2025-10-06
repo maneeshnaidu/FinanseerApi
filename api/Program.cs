@@ -103,7 +103,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowVercel",
         policy => policy
-            .WithOrigins("https://finanseer-react-app.vercel.app/") // Replace with your actual Vercel domain
+            .WithOrigins("https://finanseer-react-app.vercel.app") // Replace with your actual Vercel domain
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
