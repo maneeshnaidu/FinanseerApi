@@ -105,7 +105,8 @@ builder.Services.AddCors(options =>
         policy => policy
             .WithOrigins("https://finanseer-react-app.vercel.app/") // Replace with your actual Vercel domain
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .AllowCredentials());
 });
 
 var app = builder.Build();
