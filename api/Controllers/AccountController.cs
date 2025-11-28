@@ -41,12 +41,21 @@ namespace api.Controllers
 
             if (!result.Succeeded) return Unauthorized("Username not found and/or password incorrect");
 
+            // Generate tokens
+            var (accessToken, refreshToken) = _tokenService.GenerateToken(user);
+
+            // Save refresh token to the database
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7); // Set refresh token expiry
+            await _userManager.UpdateAsync(user);
+
             return Ok(
                 new NewUserDto
                 {
                     UserName = user.UserName ?? "",
                     Email = user.Email ?? "",
-                    Token = _tokenService.CreateToken(user)
+                    Token = accessToken,
+                    RefreshToken = refreshToken
                 }
             );
         }
@@ -69,6 +78,14 @@ namespace api.Controllers
 
                 if (createdUser.Succeeded)
                 {
+                    // Generate tokens
+                    var (accessToken, refreshToken) = _tokenService.GenerateToken(appUser);
+
+                    // Save refresh token to the database
+                    appUser.RefreshToken = refreshToken;
+                    appUser.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7); // Set refresh token expiry
+                    await _userManager.UpdateAsync(appUser);
+
                     var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
                     if (roleResult.Succeeded)
                     {
@@ -77,7 +94,8 @@ namespace api.Controllers
                             {
                                 UserName = appUser.UserName ?? "",
                                 Email = appUser.Email ?? "",
-                                Token = _tokenService.CreateToken(appUser)
+                                Token = accessToken,
+                                RefreshToken = refreshToken
                             }
                         );
                     }

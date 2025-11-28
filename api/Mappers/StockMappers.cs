@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using api.Dtos.Stock;
 using api.Models;
 
@@ -41,12 +37,25 @@ namespace api.Mappers
         {
             return new Stock
             {
-                Symbol = fmpStock.symbol,
-                CompanyName = fmpStock.companyName,
+                Symbol = fmpStock.symbol ?? "",
+                CompanyName = fmpStock.companyName  ?? "",
                 Purchase = (decimal)fmpStock.price,
                 LastDiv = (decimal)fmpStock.lastDividend,
-                Industry = fmpStock.industry,
+                Industry = fmpStock.industry ?? "",
                 MarketCap = fmpStock.marketCap
+            };
+        }
+
+        public static Stock ToStockFromAV(this AVStock avStock, decimal price)
+        {
+            return new Stock
+            {
+                Symbol = avStock.Symbol ?? "",
+                CompanyName = avStock.Name ?? "",
+                Purchase = price,
+                LastDiv = (decimal)avStock.DividendPerShare,
+                Industry = avStock.Industry ?? "",
+                MarketCap = avStock.MarketCapitalization
             };
         }
     }
